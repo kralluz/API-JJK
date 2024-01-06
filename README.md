@@ -21,8 +21,8 @@ Este projeto é uma API RESTful inspirada no anime Jujutsu Kaisen.
 
 ## Instalação e Execução
 
-1. Clone o repositório: `git clone https://github.com/seuusuario/seuprojeto.git`
-2. Navegue até o diretório do projeto: `cd seuprojeto`
+1. Clone o repositório: `git clone https://github.com/J0aoCunha/Ts-Node-API-JJK.git`
+2. Navegue até o diretório do projeto: `cd Ts-Node-API-JJK`
 3. Instale as dependências: `npm install`
 4. Crie um arquivo `.env` na raiz do projeto e configure as variáveis de ambiente necessárias.
 5. Execute as migrações do Prisma: `npx prisma migrate dev`
@@ -38,7 +38,7 @@ Este projeto é uma API RESTful inspirada no anime Jujutsu Kaisen.
 
 ## Créditos
 
-Esta API foi desenvolvida por Joao Victor da Silva Cunha(J0aoCunha).
+Esta API foi desenvolvida por Joao Victor da Silva Cunha(@J0aoCunha).
 
 ## Contribuição
 
