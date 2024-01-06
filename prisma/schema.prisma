@@ -9,3 +9,21 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+model charcter {
+  id   String @id @default(uuid())
+  name String
+  age  Int
+  bio  String
+
+  powers Power[]
+}
+
+model Power {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+
+  charcter   charcter? @relation(fields: [charcterId], references: [id])
+  charcterId String?
+}
