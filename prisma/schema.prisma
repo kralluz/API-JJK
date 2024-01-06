@@ -22,7 +22,7 @@ model Character {
 }
 
 model Power {
-  id          Int       @id @default(autoincrement())
+  id          String    @id @default(uuid())
   name        String
   description String
   character   Character @relation(fields: [characterId], references: [id])
