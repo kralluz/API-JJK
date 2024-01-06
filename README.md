@@ -1,0 +1,1 @@
+### Futura API de JUJUTSU KAISEN
