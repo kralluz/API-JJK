@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/serve.ts",
     "lint": "eslint src --ext .ts --fix",
     "build": "tsup src",
     "start": "node dist/index.js"
