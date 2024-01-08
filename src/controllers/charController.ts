@@ -35,5 +35,9 @@ class charController {
 
 		return res.json({char});
 	}
+
+	async createChar(req:Request, res:Response){
+		const bodySchema = z.object({})
+}
 }
 export default new charController();
