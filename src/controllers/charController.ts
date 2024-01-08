@@ -7,11 +7,19 @@ const prisma = new PrismaClient();
 class charController {
 	constructor() {}
 
+	// função para listar os personagens
 	async listChars(req:Request, res:Response) {
-		const allChars = await prisma.character.findMany();
-		return res.json({allChars});	
+		const allChars = await prisma.character.findMany({
+			include: {
+				power: true,
+			},
+		});
+	
+		return res.status(200).json({allChars});
 	}
 
+
+	//função para atualizar um personagem
 	async updateChar(req:Request, res:Response) {
 		const paramsSchema = z.object({
 			id: z.string().uuid(),
@@ -22,6 +30,7 @@ class charController {
 		const bodySchema = z.object({
 			name: z.string().min(3).max(255),
 			age: z.number().min(0),
+			image: z.string().min(3).max(255),
 			bio: z.string().min(3).max(255),
 		});
 
@@ -33,11 +42,56 @@ class charController {
 			data: {name, age, bio},
 		});
 
-		return res.json({char});
+		return res.status(200).json({char});
 	}
 
+
+	// função para criar um personagem
 	async createChar(req:Request, res:Response){
-		const bodySchema = z.object({})
-}
+
+		const powerSchema = z.object({
+			description: z.string().min(3).max(255),
+			name: z.string().min(3).max(255),
+		});
+
+		const bodySchema = z.object({
+			name: z.string().min(3).max(255),
+			age: z.number().min(0),
+			image: z.string().min(3).max(255),
+			bio: z.string().min(3).max(255),
+			power: powerSchema,
+		});
+
+		const {name, age, bio, image, power} = bodySchema.parse(req.body);
+
+		const char = await prisma.character.create({
+			data: {
+				name,
+				age,
+				bio,
+				image,
+				power: {
+					create: {
+						name: power.name,
+						description: power.description,
+					}
+				}
+			},
+			include: {
+				power: true
+			}
+		});
+		
+		return res.status(200).json({
+			name: char.name,
+			age: char.age,
+			bio: char.bio,
+			image: char.image,
+			power:{
+				powerName: char.power?.name,
+				powerDescription: char.power?.description,
+			}
+		});
+	}
 }
 export default new charController();
