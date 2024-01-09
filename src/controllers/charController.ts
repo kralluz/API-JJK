@@ -19,6 +19,25 @@ class charController {
 	}
 
 
+	async listChar(req:Request, res:Response){
+		const paramsSchema = z.object({
+			id: z.string().uuid(),
+		});
+
+		const {id} = paramsSchema.parse(req.params);
+
+
+		const char = await prisma.character.findUnique({
+			where: {id},
+			include: {
+				power: true,
+			},
+		});
+
+		return res.status(200).json({char});
+	}
+
+
 	//função para atualizar um personagem
 	async updateChar(req:Request, res:Response) {
 		const paramsSchema = z.object({
