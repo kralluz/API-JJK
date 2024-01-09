@@ -7,7 +7,8 @@ const prisma = new PrismaClient();
 
 
 class powerController {
-
+	
+	// funcao para listar todos os poderes
 	async listPowers(req:Request, res:Response) {
 
 		const allPowers = await prisma.power.findMany({
@@ -24,6 +25,7 @@ class powerController {
 
 	}
 
+	// funcao para listar um poder
 	async listPower(req:Request, res:Response) {
 		
 		const paramsSchema = z.object({

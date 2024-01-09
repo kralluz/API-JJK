@@ -18,7 +18,7 @@ class charController {
 		return res.status(200).json({allChars});
 	}
 
-
+	// função para listar um personagem
 	async listChar(req:Request, res:Response){
 		const paramsSchema = z.object({
 			id: z.string().uuid(),
@@ -28,7 +28,9 @@ class charController {
 
 
 		const char = await prisma.character.findUnique({
-			where: {id},
+			where: {
+				id
+			},
 			include: {
 				power: true,
 			},
@@ -111,6 +113,21 @@ class charController {
 				powerDescription: char.power?.description,
 			}
 		});
+	}
+
+
+	async deleteChar(req:Request, res:Response){ 
+		const paramsSchema = z.object({
+			id: z.string().uuid(),
+		});
+
+		const {id} = paramsSchema.parse(req.params);
+
+		const char = await prisma.character.delete({
+			where: {id},
+		});
+
+		return res.status(200).json({char});
 	}
 }
 export default new charController();
