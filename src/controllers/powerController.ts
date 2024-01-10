@@ -49,6 +49,36 @@ class powerController {
 
 		return res.status(200).json({power});
 	}
+
+	// funcao para atualizar um poder
+	async updatePower(req:Request, res:Response) {
+
+		const paramsSchema = z.object({
+			id: z.string().uuid()
+		});
+
+		const {id} = paramsSchema.parse(req.params);
+
+		const bodySchema = z.object({
+			name: z.string().min(3).max(255),
+			description: z.string().min(3).max(255)
+		});
+
+
+		const {name, description}= bodySchema.parse(req.body);
+
+		const power = await prisma.power.update({
+			where: {
+				id
+			},
+			data: {
+				name, 
+				description
+			}
+		});
+
+		return res.status(200).json({power});
+	}
 }
 
 
