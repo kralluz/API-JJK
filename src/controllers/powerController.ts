@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { z } from 'zod';
+import { string, z } from 'zod';
 
 
 const prisma = new PrismaClient();
@@ -10,8 +10,7 @@ class powerController {
 	
 	// funcao para listar todos os poderes
 	async listPowers(req:Request, res:Response) {
-
-		const allPowers = await prisma.power.findMany({
+		const allPowers = await prisma.powers.findMany({
 			include: {
 				character: {
 					select:{
@@ -22,7 +21,6 @@ class powerController {
 		});
 
 		return res.status(200).json({allPowers});
-
 	}
 
 	// funcao para listar um poder
@@ -34,7 +32,7 @@ class powerController {
 
 		const { id } = paramsSchema.parse(req.params);
 
-		const power = await prisma.power.findUnique({
+		const power = await prisma.powers.findUnique({
 			where: {
 				id,
 			},
@@ -66,14 +64,34 @@ class powerController {
 
 
 		const {name, description}= bodySchema.parse(req.body);
-
-		const power = await prisma.power.update({
+		
+		const power = await prisma.powers.update({
 			where: {
 				id
 			},
 			data: {
 				name, 
 				description
+			}
+		});
+
+		return res.status(200).json({power});
+	}
+
+
+	// funcao para deletar um poder	
+
+	async deletePower (req:Request, res:Response) {
+		const paramsPowerSchema = z.object({
+			id: string().uuid(),
+		});
+
+		const { id } = paramsPowerSchema.parse(req.params);
+
+
+		const power = await prisma.powers.delete({
+			where: {
+				id
 			}
 		});
 
