@@ -3,17 +3,18 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider          = "sqlite"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 model Character {
-  id      String  @id @unique @default(uuid())
-  name    String
-  age     Int
-  bio     String
-  image   String
-  powers  Powers[]
+  id     String   @id @unique @default(uuid())
+  name   String
+  age    Int
+  bio    String
+  image  String
+  powers Powers[]
 }
 
 model Powers {
