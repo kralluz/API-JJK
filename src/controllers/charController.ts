@@ -11,7 +11,7 @@ class charController {
 	async listChars(req:Request, res:Response) {
 		const allChars = await prisma.character.findMany({
 			include: {
-				power: true,
+				powers: true,
 			},
 		});
 	
@@ -32,7 +32,7 @@ class charController {
 				id
 			},
 			include: {
-				power: true,
+				powers: true,
 			},
 		});
 
@@ -70,51 +70,54 @@ class charController {
 	// função para criar um personagem
 	async createChar(req:Request, res:Response){
 
-		const powerSchema = z.object({
-			description: z.string().min(3).max(255),
+		const powerSchema = z.array(z.object({
 			name: z.string().min(3).max(255),
-		});
+			description: z.string().min(3).max(255),
+		}));
 
 		const bodySchema = z.object({
 			name: z.string().min(3).max(255),
 			age: z.number().min(0),
 			image: z.string().min(3).max(255),
 			bio: z.string().min(3).max(255),
-			power: powerSchema,
+			powers:	powerSchema,
 		});
 
-		const {name, age, bio, image, power} = bodySchema.parse(req.body);
+		if (!req.body) {
+			return res.status(400).json({ error: 'Corpo da solicitação ausente ou inválido.' });
+		}
 
-		const char = await prisma.character.create({
-			data: {
-				name,
-				age,
-				bio,
-				image,
-				power: {
-					create: {
-						name: power.name,
-						description: power.description,
+		try {
+			const {name, age, bio, image, powers} = bodySchema.parse(req.body);
+
+			const char = await prisma.character.create({
+				data: { 
+					name,
+					age,
+					bio,
+					image,
+					powers,
+					include: {
+						powers: true
 					}
 				}
-			},
-			include: {
-				power: true
-			}
-		});
+			});
 		
-		return res.status(200).json({
-			name: char.name,
-			age: char.age,
-			bio: char.bio,
-			image: char.image,
-			power:{
-				powerName: char.power?.name,
-				powerDescription: char.power?.description,
-			}
-		});
+			return res.status(200).json({
+				name: char.name,
+				age: char.age,
+				bio: char.bio,
+				image: char.image,
+				powers:{
+					name: char.powers.name,
+					description: char.powers.description,
+				}
+			});
+		}catch (error) {
+			console.error(error);
+			return res.status(400).json({ error: 'Erro ao processar a solicitação.' });
+		}
 	}
-
 
 	async deleteChar(req:Request, res:Response){ 
 		const paramsSchema = z.object({
@@ -130,4 +133,5 @@ class charController {
 		return res.status(200).json({char});
 	}
 }
+
 export default new charController();

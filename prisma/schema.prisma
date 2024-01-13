@@ -18,9 +18,9 @@ model Character {
 }
 
 model Powers {
-  id          String    @id @default(uuid())
+  id          String     @id @default(uuid())
   name        String
   description String
-  characterId String    @unique
-  character   Character @relation(fields: [characterId], references: [id])
+  Character   Character? @relation(fields: [characterId], references: [id])
+  characterId String?
 }

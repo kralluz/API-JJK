@@ -36,13 +36,6 @@ class powerController {
 			where: {
 				id,
 			},
-			include: {
-				character: {
-					select: {
-						name: true
-					}
-				},
-			}
 		});
 
 		return res.status(200).json({power});
@@ -78,9 +71,31 @@ class powerController {
 		return res.status(200).json({power});
 	}
 
+	// funcao para criar um poder
+	async createPower(req:Request,res: Response){
+		const bodyPowerSchema = z.object({
+			name: z.string().min(3).max(255),
+			description: z.string().min(3).max(255),
+			characterId: string().uuid(),
+		});
+
+		const { name, description, characterId } = bodyPowerSchema.parse(req.body);
+
+		const power = await prisma.powers.create({
+			data: {
+				name,
+				description,
+				connect: {
+					characterId: characterId
+				}
+			}
+		});
+
+		return res.status(200).json({power});
+	}
+
 
 	// funcao para deletar um poder	
-
 	async deletePower (req:Request, res:Response) {
 		const paramsPowerSchema = z.object({
 			id: string().uuid(),
