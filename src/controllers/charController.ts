@@ -75,15 +75,22 @@ class charController {
 
 	// função para criar um personagem
 	async createChar(req:Request, res:Response){
+
+		const domainExpansionsSchema = z.object({
+			id: z.string().uuid(),
+		});
+
 		const powersSchema = z.object({
 			id: z.string().uuid(),
 		});
+
 		const bodySchema = z.object({
 			name: z.string().min(3).max(255),
 			age: z.number().min(0),
 			image: z.string().min(3).max(255),
 			bio: z.string().min(3).max(255),
-			powers:z.array(powersSchema)
+			powers:z.array(powersSchema),
+			domainExpansions: z.array(domainExpansionsSchema),
 		});
 
 		if (!req.body) {
@@ -91,7 +98,7 @@ class charController {
 		}
 
 		try {
-			const {name, age, bio, image, powers} = bodySchema.parse(req.body);
+			const {name, age, bio, image, powers, domainExpansions} = bodySchema.parse(req.body);
 
 			const char = await prisma.character.create({
 				data: { 
@@ -102,6 +109,9 @@ class charController {
 					powers: {
 						connect: powers,
 					},
+					domainExpansion:{
+						connect: domainExpansions,
+					}
 				}
 			});
 
@@ -111,6 +121,7 @@ class charController {
 				bio: char.bio,
 				image: char.image,
 				powers: powers,
+				domainExpansions: domainExpansions,
 			});
 			
 		}catch (error) {
