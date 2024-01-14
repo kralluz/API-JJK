@@ -9,15 +9,24 @@ datasource db {
 }
 
 model Character {
-  id     String   @id @unique @default(uuid())
-  name   String
-  age    Int
-  bio    String
-  image  String
-  powers Powers[]
+  id              String             @id @unique @default(uuid())
+  name            String
+  age             Int
+  bio             String
+  image           String
+  powers          Powers[]
+  domainExpansion DomainExpansions[]
 }
 
 model Powers {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  Character   Character? @relation(fields: [characterId], references: [id])
+  characterId String?
+}
+
+model DomainExpansions {
   id          String     @id @default(uuid())
   name        String
   description String
