@@ -12,11 +12,7 @@ class powerController {
 	async listPowers(req:Request, res:Response) {
 		const allPowers = await prisma.powers.findMany({
 			include: {
-				character: {
-					select:{
-						name:true
-					}
-				},
+				Character: true,
 			},
 		});
 
@@ -76,18 +72,14 @@ class powerController {
 		const bodyPowerSchema = z.object({
 			name: z.string().min(3).max(255),
 			description: z.string().min(3).max(255),
-			characterId: string().uuid(),
 		});
 
-		const { name, description, characterId } = bodyPowerSchema.parse(req.body);
+		const { name, description } = bodyPowerSchema.parse(req.body);
 
 		const power = await prisma.powers.create({
 			data: {
 				name,
 				description,
-				connect: {
-					characterId: characterId
-				}
 			}
 		});
 
