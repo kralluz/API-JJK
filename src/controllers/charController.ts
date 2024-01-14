@@ -42,6 +42,7 @@ class charController {
 
 	//função para atualizar um personagem
 	async updateChar(req:Request, res:Response) {
+		
 		const paramsSchema = z.object({
 			id: z.string().uuid(),
 		});
@@ -56,14 +57,15 @@ class charController {
 		});
 
 
-		const {name, age, bio} = bodySchema.parse(req.body);
+		const {name, age, bio, image} = bodySchema.parse(req.body);
 
 		const char = await prisma.character.update({
 			where: {id},
 			data: {
 				name, 
 				age, 
-				bio
+				bio,
+				image,
 			},
 		});
 
