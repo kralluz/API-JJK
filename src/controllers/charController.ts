@@ -60,7 +60,11 @@ class charController {
 
 		const char = await prisma.character.update({
 			where: {id},
-			data: {name, age, bio},
+			data: {
+				name, 
+				age, 
+				bio
+			},
 		});
 
 		return res.status(200).json({char});
@@ -69,18 +73,15 @@ class charController {
 
 	// função para criar um personagem
 	async createChar(req:Request, res:Response){
-
-		const powerSchema = z.array(z.object({
-			name: z.string().min(3).max(255),
-			description: z.string().min(3).max(255),
-		}));
-
+		const powersSchema = z.object({
+			id: z.string().uuid(),
+		});
 		const bodySchema = z.object({
 			name: z.string().min(3).max(255),
 			age: z.number().min(0),
 			image: z.string().min(3).max(255),
 			bio: z.string().min(3).max(255),
-			powers:	powerSchema,
+			powers:z.array(powersSchema)
 		});
 
 		if (!req.body) {
@@ -96,23 +97,20 @@ class charController {
 					age,
 					bio,
 					image,
-					powers,
-					include: {
-						powers: true
-					}
+					powers: {
+						connect: powers,
+					},
 				}
 			});
-		
+
 			return res.status(200).json({
 				name: char.name,
 				age: char.age,
 				bio: char.bio,
 				image: char.image,
-				powers:{
-					name: char.powers.name,
-					description: char.powers.description,
-				}
+				powers: powers,
 			});
+			
 		}catch (error) {
 			console.error(error);
 			return res.status(400).json({ error: 'Erro ao processar a solicitação.' });
