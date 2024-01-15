@@ -115,14 +115,7 @@ class charController {
 				}
 			});
 
-			return res.status(200).json({
-				name: char.name,
-				age: char.age,
-				bio: char.bio,
-				image: char.image,
-				powers: powers,
-				domainExpansions: domainExpansions,
-			});
+			return res.status(200).json({ char	});
 			
 		}catch (error) {
 			console.error(error);
