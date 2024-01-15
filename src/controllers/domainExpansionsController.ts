@@ -12,7 +12,11 @@ class domainsExpansionController {
 	async listAllDomainsExpansion(req:Request, res:Response) {
 		const allDomainsExpansion = await prisma.domainExpansions.findMany({
 			include: {
-				Character: true,
+				Character: {
+					select: {
+						name: true,
+					}
+				}
 			}
 		});
     
@@ -41,21 +45,33 @@ class domainsExpansionController {
 
 	// função para criar um domínio de expansão
 	async createDomainExpansion(res:Response, req:Request){
-		const bodyDomainExpansionSchema = z.object({
-			name: z.string(),
-			description: z.string(),
+		const bodySimpleDomainExpansionSchema = z.object({
+			id: z.string().uuid(),
 		});
 
-		const {name, description}= bodyDomainExpansionSchema.parse(req.body);
+		const bodyDomainExpansionSchema = z.object({
+			id: z.string().uuid(),
+		});
 
-		const domainExpansion = await prisma.domainExpansions.create({
+		const bodyDomainExpansionsSchema = z.object({
+			domainExpansion: bodyDomainExpansionSchema,
+			simpleDomain:	bodySimpleDomainExpansionSchema,
+		});
+
+		const { simpleDomain,domainExpansion}= bodyDomainExpansionsSchema.parse(req.body);
+
+		const domainsExpansion = await prisma.domainExpansions.create({
 			data: {
-				name,
-				description,
+				simpleDomain:{
+					connect: simpleDomain
+				},
+				domainExpansion:{
+					connect: domainExpansion
+				},
 			},
 		});
 
-		return res.status(200).json({domainExpansion});
+		return res.status(200).json({domainsExpansion});
 	}
 }
 

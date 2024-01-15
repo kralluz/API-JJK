@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
-import { string, z } from 'zod';
+import { z } from 'zod';
 
 
 const prisma = new PrismaClient();
@@ -90,7 +90,7 @@ class powerController {
 	// funcao para deletar um poder	
 	async deletePower (req:Request, res:Response) {
 		const paramsPowerSchema = z.object({
-			id: string().uuid(),
+			id: z.string().uuid(),
 		});
 
 		const { id } = paramsPowerSchema.parse(req.params);
