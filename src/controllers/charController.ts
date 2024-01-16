@@ -12,6 +12,7 @@ class charController {
 		const allChars = await prisma.character.findMany({
 			include: {
 				powers: true,
+				domainExpansions: true,
 			},
 		});
 	
@@ -109,13 +110,20 @@ class charController {
 					powers: {
 						connect: powers,
 					},
-					domainExpansion:{
+					domainExpansions:{
 						connect: domainExpansions,
 					}
 				}
 			});
 
-			return res.status(200).json({ char	});
+			return res.status(200).json({ 
+				name: char.name,
+				age: char.age,
+				bio: char.bio,
+				image: char.image,
+				powers: powers,
+				domainExpansions: domainExpansions,
+			});
 			
 		}catch (error) {
 			console.error(error);
