@@ -9,13 +9,13 @@ datasource db {
 }
 
 model Character {
-  id              String             @id @unique @default(uuid())
-  name            String
-  age             Int
-  bio             String
-  image           String
-  powers          Powers[]
-  domainExpansion DomainExpansions[]
+  id               String            @id @unique @default(uuid())
+  name             String
+  age              Int
+  bio              String
+  image            String
+  powers           Powers[]
+  domainExpansions DomainExpansion[]
 }
 
 model Powers {
@@ -26,26 +26,10 @@ model Powers {
   characterId String?
 }
 
-model DomainExpansions {
-  id                      String                @id @default(uuid())
-  domainExpansion         domainExpansion       @relation(fields: [domainExpansionId], references: [id])
-  simpleDomain            simpleDomainExpansion @relation(fields: [simpleDomainExpansionId], references: [id])
-  Character               Character?            @relation(fields: [characterId], references: [id])
-  characterId             String?
-  simpleDomainExpansionId String
-  domainExpansionId       String
-}
-
-model simpleDomainExpansion {
-  id               String             @id @default(uuid())
-  name             String
-  description      String
-  DomainExpansions DomainExpansions[]
-}
-
-model domainExpansion {
-  id               String             @id @default(uuid())
-  name             String
-  description      String
-  DomainExpansions DomainExpansions[]
+model DomainExpansion {
+  id          String     @id @default(uuid())
+  name        String
+  description String
+  Character   Character? @relation(fields: [characterId], references: [id])
+  characterId String?
 }
