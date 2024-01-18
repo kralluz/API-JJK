@@ -198,7 +198,7 @@ Esta API foi desenvolvida por Joao Victor da Silva Cunha(@J0aoCunha).
 
 1. `git clone https://github.com/J0aoCunha/Ts-Node-API-JJK.git`
 2. `git checkout -b feature/nome da branch`
-3. Follow commit patterns
+3. Siga os padrões de commit
 4. Abra um Pull Request explicando o problema resolvido ou recurso realizado, se existir, anexe screenshot das modificações visuais e aguarde a revisão!
 
 <h3>Documentações que podem ajudar a realizar o Pull Request</h3>
