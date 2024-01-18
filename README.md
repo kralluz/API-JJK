@@ -1,4 +1,21 @@
+[TYPESCRIPT__BADGE]: https://img.shields.io/badge/typescript-D4FAFF?style=for-the-badge&logo=typescript
+[EXPRESS__BADGE]: https://img.shields.io/badge/express-005CFE?style=for-the-badge&logo=express
+[NODE__BADGE]:https://img.shields.io/badge/Node.js-339933.svg?style=for-the-badge&logo=nodedotjs&logoColor=white
+[ZOD__BADGE]:https://img.shields.io/badge/Zod-3E67B1.svg?style=for-the-badge&logo=Zod&logoColor=white
+[PRISMA__BADGE]:https://img.shields.io/badge/Prisma-2D3748.svg?style=for-the-badge&logo=Prisma&logoColor=white
+
 <h1 align="center" style="font-weight: bold;">API do Anime Jujutsu Kaisen 💻</h1> 
+
+<div align="center">
+
+![typescript][TYPESCRIPT__BADGE]
+![express][EXPRESS__BADGE]
+![node][NODE__BADGE]
+![zod][ZOD__BADGE]
+![prisma][PRISMA__BADGE]
+
+</div>
+
 
 <p align="center">
  <a href="#tech">Technologies</a> • 
