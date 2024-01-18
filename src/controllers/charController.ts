@@ -15,10 +15,15 @@ class charController {
 			page: z.string().optional(),
 		});
 
-		let {page = 1 } = pageSchema.parse(req.query);		page = Number(page);
+		// variavel para paginação inicializada com 1
+		let {page = 1 } = pageSchema.parse(req.query);		
+		// converte a variavel page para number
+		page = Number(page);
 
 		// limite de personagens por pagina
-		const limit = 2;
+		const limit = 6;
+
+		// ultima pagina
 		let lastPage = 1;
 
 		// conta o total de personagens cadastrados
@@ -73,12 +78,13 @@ class charController {
 		const {id} = paramsSchema.parse(req.params);
 
 		// verifica se o personagem existe
-		const char = await prisma.character.findUnique({
+		const char = await prisma.character.findUniqueOrThrow({
 			where: {
 				id
 			},
 			include: {
 				powers: true,
+				domainExpansions: true,
 			},
 		});
 
