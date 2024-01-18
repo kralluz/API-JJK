@@ -28,7 +28,7 @@ class powerController {
 		
 		// verifica se o id é valido
 		const paramsSchema = z.object({
-			id: z.string().uuid(),
+			id: z.string().cuid(),
 		});
 
 		// verifica se o id é valido
@@ -50,7 +50,7 @@ class powerController {
 
 		// verifica se o id é valido
 		const paramsSchema = z.object({
-			id: z.string().uuid()
+			id: z.string().cuid()
 		});
 
 		// verifica se o id é valido
@@ -108,7 +108,7 @@ class powerController {
 	// funcao para deletar um poder	
 	async deletePower (req:Request, res:Response) {
 		const paramsPowerSchema = z.object({
-			id: z.string().uuid(),
+			id: z.string().cuid(),
 		});
 
 		// verifica se o id é valido
