@@ -9,25 +9,70 @@ class charController {
 
 	// função para listar os personagens
 	async listChars(req:Request, res:Response) {
+
+		// paginação dos personagens
+		const pageSchema = z.object({
+			page: z.string().optional(),
+		});
+
+		let {page = 1 } = pageSchema.parse(req.query);		page = Number(page);
+
+		// limite de personagens por pagina
+		const limit = 2;
+		let lastPage = 1;
+
+		// conta o total de personagens cadastrados
+		const countChars = await prisma.character.count();
+
+		// verifica se há personagens cadastrados
+		if(countChars != 0){
+			// calcula o total de paginas
+			lastPage = Math.ceil(countChars / limit);
+		}else{
+			// retorna uma mensagem caso não haja personagens cadastrados
+			return res.status(200).json({message: 'Não há personagens cadastrados'});
+		}
+
 		const allChars = await prisma.character.findMany({
 			include: {
 				powers: true,
 				domainExpansions: true,
 			},
+			// verifica se a pagina é valida
+			skip: (page * limit)-limit,
+			// limite de personagens por pagina
+			take: limit,
 		});
 	
-		return res.status(200).json({allChars});
+
+		const pagination = {	
+			// caminho para a paginação
+			path: '/characters',
+			// pagina atual
+			Current_Page: Number(page),
+			// proxima pagina
+			Next_Page: Number(page) < lastPage ? Number(page) + 1 : undefined,
+			// pagina anterior
+			prev_page: Number(page) > 1 ? Number(page) - 1 : undefined,
+			// ultima pagina
+			Last_Page: lastPage,
+			// total de personagens
+			total_Chars: countChars,
+		};
+		return res.status(200).json({pagination,allChars});
 	}
 
 	// função para listar um personagem
 	async listChar(req:Request, res:Response){
+		// verifica se o id é valido
 		const paramsSchema = z.object({
 			id: z.string().uuid(),
 		});
 
+		// verifica se o id é valido
 		const {id} = paramsSchema.parse(req.params);
 
-
+		// verifica se o personagem existe
 		const char = await prisma.character.findUnique({
 			where: {
 				id
@@ -37,6 +82,7 @@ class charController {
 			},
 		});
 
+		// retorna o personagem
 		return res.status(200).json({char});
 	}
 
@@ -44,22 +90,24 @@ class charController {
 	//função para atualizar um personagem
 	async updateChar(req:Request, res:Response) {
 		
+		// verifica se o id é valido
 		const paramsSchema = z.object({
 			id: z.string().uuid(),
 		});
 
+		// verifica se o id é valido
 		const {id} = paramsSchema.parse(req.params);
 
+		// verifica se o corpo da requisição é valido
 		const bodySchema = z.object({
 			name: z.string().min(3).max(255),
 			age: z.number().min(0),
 			image: z.string().min(3).max(255),
 			bio: z.string().min(3).max(255),
 		});
-
-
 		const {name, age, bio, image} = bodySchema.parse(req.body);
 
+		// verifica se o personagem existe
 		const char = await prisma.character.update({
 			where: {id},
 			data: {
@@ -70,6 +118,7 @@ class charController {
 			},
 		});
 
+		// retorna o personagem atualizado
 		return res.status(200).json({char});
 	}
 
@@ -77,14 +126,17 @@ class charController {
 	// função para criar um personagem
 	async createChar(req:Request, res:Response){
 
+		// verifica se o corpo da requisição é valido
 		const domainExpansionsSchema = z.object({
 			id: z.string().uuid(),
 		});
 
+		// verifica se o corpo da requisição é valido
 		const powersSchema = z.object({
 			id: z.string().uuid(),
 		});
 
+		// verifica se o corpo da requisição é valido
 		const bodySchema = z.object({
 			name: z.string().min(3).max(255),
 			age: z.number().min(0),
@@ -101,6 +153,7 @@ class charController {
 		try {
 			const {name, age, bio, image, powers, domainExpansions} = bodySchema.parse(req.body);
 
+			// verifica se o personagem já existe
 			const char = await prisma.character.create({
 				data: { 
 					name,
@@ -116,7 +169,8 @@ class charController {
 				}
 			});
 
-			return res.status(200).json({ 
+			// retorna o personagem criado
+			return res.status(201).json({ 
 				name: char.name,
 				age: char.age,
 				bio: char.bio,
@@ -126,22 +180,27 @@ class charController {
 			});
 			
 		}catch (error) {
+			// retorna erro caso não seja possivel criar o personagem
 			console.error(error);
 			return res.status(400).json({ error: 'Erro ao processar a solicitação.' });
 		}
 	}
 
 	async deleteChar(req:Request, res:Response){ 
+		// verifica se o id é valido
 		const paramsSchema = z.object({
 			id: z.string().uuid(),
 		});
 
+		// verifica se o id é valido
 		const {id} = paramsSchema.parse(req.params);
 
+		// verifica se o personagem existe
 		const char = await prisma.character.delete({
 			where: {id},
 		});
 
+		// retorna o personagem deletado
 		return res.status(200).json({char});
 	}
 }
