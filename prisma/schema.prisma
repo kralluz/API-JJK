@@ -27,9 +27,9 @@ model Powers {
 }
 
 model DomainExpansion {
-  id          String     @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   description String
-  Character   Character? @relation(fields: [characterId], references: [id])
-  characterId String?
+  Character   Character @relation(fields: [characterId], references: [id])
+  characterId String
 }
