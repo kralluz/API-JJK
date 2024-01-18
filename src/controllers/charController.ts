@@ -66,7 +66,7 @@ class charController {
 	async listChar(req:Request, res:Response){
 		// verifica se o id é valido
 		const paramsSchema = z.object({
-			id: z.string().uuid(),
+			id: z.string().cuid(),
 		});
 
 		// verifica se o id é valido
@@ -92,7 +92,7 @@ class charController {
 		
 		// verifica se o id é valido
 		const paramsSchema = z.object({
-			id: z.string().uuid(),
+			id: z.string().cuid(),
 		});
 
 		// verifica se o id é valido
@@ -128,12 +128,12 @@ class charController {
 
 		// verifica se o corpo da requisição é valido
 		const domainExpansionsSchema = z.object({
-			id: z.string().uuid(),
+			id: z.string().cuid(),
 		});
 
 		// verifica se o corpo da requisição é valido
 		const powersSchema = z.object({
-			id: z.string().uuid(),
+			id: z.string().cuid(),
 		});
 
 		// verifica se o corpo da requisição é valido
@@ -189,7 +189,7 @@ class charController {
 	async deleteChar(req:Request, res:Response){ 
 		// verifica se o id é valido
 		const paramsSchema = z.object({
-			id: z.string().uuid(),
+			id: z.string().cuid(),
 		});
 
 		// verifica se o id é valido
