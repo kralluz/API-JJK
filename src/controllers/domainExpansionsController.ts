@@ -11,6 +11,34 @@ class domainsExpansionController {
 	// função para listar todos os domínios de expansão
 	async listAllDomainsExpansion(req:Request, res:Response) {
 
+		// valida a variavel page
+		const pageDomainSchema = z.object({
+			page: z.string().optional(),
+		});
+
+		// variavel para paginação inicializada com 1
+		let {page = 1} = pageDomainSchema.parse(req.query);
+		// converte a variavel page para number
+		page = Number(page);
+
+		// limite de domínios de expansão por pagina
+		const limitDomains = 10;
+
+		// ultima pagina
+		let lastDomainPage = 1;
+
+		// conta o total de domínios de expansão cadastrados
+		const countDomains = await prisma.domainExpansion.count();
+
+		// verifica se há domínios de expansão cadastrados
+		if(countDomains != 0){
+			// calcula o total de paginas
+			lastDomainPage = Math.ceil(countDomains / limitDomains);
+		}else{
+			// retorna uma mensagem caso não haja domínios de expansão cadastrados
+			return res.status(200).json({message: 'Não há domínios de expansão cadastrados'});
+		}
+
 		// lista todos os domínios de expansão
 		const allDomainsExpansion = await prisma.domainExpansion.findMany({
 			include: {
@@ -21,11 +49,27 @@ class domainsExpansionController {
 						name: true,
 					}
 				}
-			}
+			},
+			skip: (page * limitDomains)-limitDomains,
+			// limite de domínios de expansão por pagina
+			take: limitDomains,
 		});
-    
+		const paginationDomains = {	
+			// caminho para a paginação
+			path: '/DomainsExpansion',
+			// pagina atual
+			Current_Page: Number(page),
+			// proxima pagina
+			Next_Page: Number(page) < lastDomainPage? Number(page) + 1 : undefined,
+			// pagina anterior
+			prev_page: Number(page) > 1 ? Number(page) - 1 : undefined,
+			// ultima pagina
+			Last_Page: lastDomainPage,
+			// total de personagens
+			total_Domains: countDomains,
+		};
 		// retorna todos os domínios de expansão
-		return res.status(200).json({allDomainsExpansion});
+		return res.status(200).json({paginationDomains,allDomainsExpansion});
 	}
 
 	// função para listar um domínio de expansão
@@ -39,7 +83,7 @@ class domainsExpansionController {
 		const {id} = paramsSchema.parse(req.params);
 
 		// verifica se o domínio de expansão existe
-		const domainsExpansion = await prisma.domainExpansion.findUnique({
+		const domainsExpansion = await prisma.domainExpansion.findUniqueOrThrow({
 			where: {
 				id,
 			},
