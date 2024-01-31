@@ -187,7 +187,7 @@ Esta API foi desenvolvida por Joao Victor da Silva Cunha(@J0aoCunha).
 
  <a href="#">
         <img src="https://media.licdn.com/dms/image/D4D03AQFCCuAsAnp6vw/profile-displayphoto-shrink_800_800/0/1681515236076?e=1710979200&v=beta&t=0nH2KnkGeWXN03oLgSvY4Ui7ghdDdU_JX97-yg0SV1o" 
-        width="100px;" alt="Fernanda Kipper Profile Picture"
+        width="100px;" 
         /><br>
         <sub>
           <b>Joao Victor da Silva Cunha</b>
